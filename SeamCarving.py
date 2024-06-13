@@ -172,36 +172,25 @@ def display(image : np.ndarray):
     plt.yticks([])
     plt.show()
 
-if __name__ == '__main__':
+def seamCarving(nb_iter : int = 2, image : np.ndarray = None) -> np.ndarray:
+
+    for _ in tqdm(range(0, nb_iter)):
+
+        gray_image = rgb2gray(image)
+
+        energy = filters.sobel(gray_image)
+        x_dyn=x_dynamic(energy)
+        seam=get_seam(gray_image,x_dyn)
         
-    image = mpimg.imread('lion.jpg')     
-    gray = rgb2gray(image)    
-    
-#    gray=np.random.random((5, 5))
-    image=np.copy(gray)
-    display(image)
-    
-    debug=1
-        
-    if debug:
-        displayGradient(image)
-    
-    for i in range(100):
-        
-        display(gray)
-        energy = filters.sobel(gray)
-        x_dyn=x_dynamic(energy) 
-        display(x_dyn)
-        s=get_seam(gray,x_dyn)
-        
-        s=s[::-1]
-        
-        for j in range(gray.shape[0]):
-            
-            gray[j][s[j]]=255
-            
-        display(gray)
-        gray=carving(gray,x_dyn,s)
-        display(gray)
-        time.sleep(1)
-        
+        seam=seam[::-1]
+                    
+        # empty image with x,y-1,z dimension based on the original image
+        image_rgb = np.zeros((image.shape[0], image.shape[1]-1, 3), dtype=np.uint8)
+
+        for n_dim in range(3):
+            image_rgb[:,:,n_dim] = carving(image[:,:,n_dim], x_dyn, seam)
+
+        image = image_rgb
+
+
+    return image
