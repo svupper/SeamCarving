@@ -8,16 +8,14 @@ Created on Sun Jul 21 13:23:58 2019
 #from PIL import Image
 
 from matplotlib import pyplot as plt
-from skimage.color import rgb2gray
-from skimage import filters
 
+from skimage import filters
+from tqdm import tqdm
 import numpy as np
 import matplotlib.image as mpimg
 import time
 
-#def steamConcatenate():
-    
-def rgb2gray(rgb):
+import argparse
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def x_dynamic(image):
