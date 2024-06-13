@@ -59,46 +59,46 @@ def x_dynamic(image):
             
     return dyn
 
-def get_seam(image,dyn_image):
-    s=np.array([],dtype=int)
+def get_seam(image : np.ndarray, dyn_image : np.ndarray) -> np.array:
+    seam=np.array([],dtype=int)
     i=dyn_image.shape[0]-1
     j=np.argmin(dyn_image[-1,:])
-    s=np.append(s,j)
+    seam=np.append(seam,j)
     
     for i in reversed(range(1,dyn_image.shape[0])):
         if j==0:
             a=np.argmin((dyn_image[i-1,j],dyn_image[i-1,j+1]))
             if a==0:
                 j=j
-                s=np.append(s,j)
+                seam=np.append(seam,j)
             else:
                 j=j+1
-                s=np.append(s,j)
+                seam=np.append(seam,j)
         elif j==(dyn_image.shape[1]-1):
             a=np.argmin((dyn_image[i-1,j-1],dyn_image[i-1,j]))
             if a==0:
                 j=j-1
-                s=np.append(s,j)
+                seam=np.append(seam,j)
             else:
                 j=j
-                s=np.append(s,j)
+                seam=np.append(seam,j)
         else:
             a=np.argmin((dyn_image[i-1,j-1],dyn_image[i-1,j],dyn_image[i-1,j+1]))
             if a==0:
                 j=j-1
-                s=np.append(s,j)
+                seam=np.append(seam,j)
             elif a==1:
                 j=j
-                s=np.append(s,j)
+                seam=np.append(seam,j)
             else:
                 j=j+1
-                s=np.append(s,j)
-    return s
+                seam=np.append(seam,j)
+    return seam
 
-def carving(image,dyn_image,s):
+def carving(image : np.ndarray, dyn_image : np.ndarray, seam : np.array):
     image_s=np.zeros_like(dyn_image[:,0:(dyn_image.shape[1]-1)])
-    s=s[::-1]
-    j=s[-1]
+    seam=seam[::-1]
+    j=seam[-1]
     
     if j==0:
         image_s[-1,:]=image[-1,1:(image.shape[1])]
@@ -117,7 +117,7 @@ def carving(image,dyn_image,s):
             image_s[-1,:]=np.concatenate((image[-1,0:j],image[-1,(j+1):(image.shape[1])]),axis=None)
         
     for i in reversed(range(dyn_image.shape[0]-1)):
-        j=s[i]
+        j=seam[i]
         if j==0:
             image_s[i,:]=image[i,1:(image.shape[1])]
             
@@ -136,11 +136,10 @@ def carving(image,dyn_image,s):
             
     return image_s 
 
-
-def displayGradient(image):
+def displayGradient(image : np.ndarray):
     
-    plt.gray()
-    plt.figure(figsize=(10,10))
+    # plt.gray()
+    # plt.figure(figsize=(10,10))
     plt.subplot(221)
     plt.imshow(image)
     plt.xticks([])
@@ -166,8 +165,8 @@ def displayGradient(image):
     plt.yticks([])
     plt.show()
 
-def display(image):
-    plt.figure(figsize=(5,5))
+def display(image : np.ndarray):
+    plt.figure()
     plt.imshow(image)
     plt.xticks([])
     plt.yticks([])
