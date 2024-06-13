@@ -16,6 +16,32 @@ import matplotlib.image as mpimg
 import time
 
 import argparse
+
+    
+class SeamCarvingJob():
+    def __init__(self):
+        pass
+
+    def load_argparse(self):
+        argparser = argparse.ArgumentParser(description='Seam Carving')
+        argparser.add_argument('--input', help='Input image file', required=True)
+        argparser.add_argument('--output', help='Output image file', required=True)
+        argparser.add_argument('--nb_iter', help='Number of iterations', default=1, type=int)
+
+        args : argparse.Namespace = argparser.parse_args()
+        self.input :str = args.input
+        self.output :str = args.output
+        self.nb_iter :int = args.nb_iter
+
+    def load_image(self):
+        self.image : np.ndarray = mpimg.imread(self.input)
+        self.gray : np.ndarray = rgb2gray(self.image)
+
+    def save_image(self):
+        mpimg.imsave(self.output, self.image)
+
+
+def rgb2gray(rgb : np.ndarray) -> np.ndarray:
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def x_dynamic(image):
