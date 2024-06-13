@@ -194,3 +194,18 @@ def seamCarving(nb_iter : int = 2, image : np.ndarray = None) -> np.ndarray:
 
 
     return image
+
+def cli():
+    job = SeamCarvingJob()
+    job.load_argparse()
+    job.load_image()
+    job.image = seamCarving(job.nb_iter, job.image)
+    job.save_image()
+
+if __name__ == '__main__':
+        
+    cli()
+    print('done')
+
+    
+    
